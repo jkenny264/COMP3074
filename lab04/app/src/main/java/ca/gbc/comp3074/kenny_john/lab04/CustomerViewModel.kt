@@ -10,23 +10,28 @@ class CustomerViewModel (
 ): ViewModel() {
     val customers: Flow<List<Customer>> = customerDao.getAll()
 
-    suspend fun addCustomer(
+    fun addCustomer(
         name: String,
         age: Int,
         isActive: Boolean
 
     ) {
-        customerDao.insert(
-            Customer(
-                name = name,
-                age = age,
-                isActive = isActive
+        viewModelScope.launch {
+            customerDao.insert(
+                Customer(
+                    name = name,
+                    age = age,
+                    isActive = isActive
+                )
             )
-        )
+        }
     }
 
-    suspend fun deleteCustomer(customer:Customer) {
-        customerDao.delete(customer)
+    fun deleteCustomer(customer:Customer) {
+        viewModelScope.launch {
+            customerDao.delete(customer)
+        }
+
     }
 
 }
